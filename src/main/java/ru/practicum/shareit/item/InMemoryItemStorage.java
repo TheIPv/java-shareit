@@ -8,7 +8,6 @@ import ru.practicum.shareit.exception.NoSuchItemException;
 
 import java.util.LinkedList;
 import java.util.List;
-
 @Component("InMemoryItemStorage")
 @Slf4j
 public class InMemoryItemStorage implements ItemStorage {

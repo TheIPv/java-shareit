@@ -5,6 +5,7 @@ import java.util.List;
 public interface ItemStorage {
 
     Item addItem(Item item);
+
     Item updateItem(Item item);
 
     Item getItemById(Long itemId);
