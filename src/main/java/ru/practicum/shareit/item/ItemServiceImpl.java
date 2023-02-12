@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto addItem(Long ownerId, ItemDto item) {
-        if(ownerId == null) {
+        if (ownerId == null) {
             throw new NotValidException("Owner ID not specified");
         }
         Item createdItem = itemMapper.toItem(item, userStorage.getUserById(ownerId), null);
@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto updateItem(Long userId, ItemDto item) {
-        if(userId == null) {
+        if (userId == null) {
             throw new NotValidException("User ID not specified");
         }
         Item updatedItem = itemMapper.toItem(item, userStorage.getUserById(userId), null);
@@ -41,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Long itemId) {
-        if(itemId == null) {
+        if (itemId == null) {
             throw new NotValidException("Item ID not specified");
         }
         return itemMapper.toItemDto(itemStorage.getItemById(itemId));
@@ -49,24 +49,24 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getUserItems(Long userId) {
-        if(userId == null) {
+        if (userId == null) {
             throw new NotValidException("User ID not specified");
         }
         return itemStorage.getUserItems(userId)
                 .stream()
-                .map(ItemMapper ::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> searchItemByText(String search) {
-        if(search == null) {
+        if (search == null) {
             throw new NotValidException("Request not specified");
         }
         return itemStorage.searchItemByText(search)
                 .stream()
                 .filter(Item::getAvailable)
-                .map(ItemMapper :: toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 }

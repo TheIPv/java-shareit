@@ -5,10 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.AlreadyExistException;
 import ru.practicum.shareit.exception.NoSuchItemException;
 
-import javax.validation.ValidationException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Component("InMemoryUserStorage")
@@ -24,8 +22,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(Long userId) {
-        for(User currentUser: users) {
-            if(currentUser.getId() == userId) {
+        for (User currentUser: users) {
+            if (currentUser.getId() == userId) {
                 return currentUser;
             }
         }
@@ -43,13 +41,13 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        for(User currentUser: users) {
-            if(currentUser.getId() == user.getId()) {
-               if(user.getEmail() != null) {
+        for (User currentUser: users) {
+            if (currentUser.getId() == user.getId()) {
+               if (user.getEmail() != null) {
                    checkIfEmailExist(user.getEmail());
                    currentUser.setEmail(user.getEmail());
                }
-               if(user.getName() != null) currentUser.setName(user.getName());
+               if (user.getName() != null) currentUser.setName(user.getName());
                return currentUser;
             }
         }
@@ -58,8 +56,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void deleteUser(Long userId) {
-        for(User currentUser: users) {
-            if(currentUser.getId() ==  userId) {
+        for (User currentUser: users) {
+            if (currentUser.getId() ==  userId) {
                 users.remove(currentUser);
                 return;
             }
@@ -68,7 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     private boolean checkIfEmailExist(String email) {
-        if(!users.isEmpty()) {
+        if (!users.isEmpty()) {
             for (User currentUser : users) {
                 if (currentUser.getEmail().equals(email)) {
                     log.trace("[X] User with email _{} is already exist", currentUser.getEmail());

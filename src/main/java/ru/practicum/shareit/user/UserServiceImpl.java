@@ -3,11 +3,9 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AlreadyExistException;
 import ru.practicum.shareit.exception.NotValidException;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.ValidationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -26,7 +24,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Showing all users");
         return userStorage.getAllUsers()
                 .stream()
-                .map(userMapper :: toUserDto)
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto user) {
-        if(user.getEmail() == null || user.getName() == null) {
+        if (user.getEmail() == null || user.getName() == null) {
             throw new NotValidException("Incorrect user data");
         }
         checkValid(user);
@@ -67,11 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean checkValid(UserDto user) {
-        if(user.getEmail() != null && (user.getEmail().isEmpty()
+        if (user.getEmail() != null && (user.getEmail().isEmpty()
                 || user.getEmail().isBlank() || !user.getEmail().contains("@"))) {
             throw new NotValidException("Incorrect user data");
         }
-        if(user.getName() != null && (user.getName().isBlank()
+        if (user.getName() != null && (user.getName().isBlank()
                 || user.getName().isEmpty())) {
             throw new NotValidException("Incorrect user data");
         }

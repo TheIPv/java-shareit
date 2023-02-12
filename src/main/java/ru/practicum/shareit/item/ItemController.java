@@ -15,6 +15,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                    @Valid @RequestBody ItemDto itemDto) {
@@ -39,7 +40,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItemByText (@RequestParam String text) {
+    public List<ItemDto> searchItemByText(@RequestParam String text) {
         return itemService.searchItemByText(text);
     }
 

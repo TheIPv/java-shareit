@@ -26,9 +26,9 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public Item updateItem(Item item) {
-        for(Item currentItem: items) {
-            if(currentItem.getId() == item.getId()) {
-                if(item.getOwner() == currentItem.getOwner()) {
+        for (Item currentItem: items) {
+            if (currentItem.getId() == item.getId()) {
+                if (item.getOwner() == currentItem.getOwner()) {
 
                     if (item.getAvailable() != null) {
                         currentItem.setAvailable(item.getAvailable());
@@ -56,8 +56,8 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public Item getItemById(Long itemId) {
-        for(Item currentItem : items) {
-            if(currentItem.getId() == itemId) {
+        for (Item currentItem : items) {
+            if (currentItem.getId() == itemId) {
                 return currentItem;
             }
         }
@@ -67,8 +67,8 @@ public class InMemoryItemStorage implements ItemStorage {
     @Override
     public List<Item> getUserItems(Long userId) {
         List<Item> userItems = new LinkedList<>();
-        for(Item currentItem : items) {
-            if(currentItem.getOwner().getId() == userId) {
+        for (Item currentItem : items) {
+            if (currentItem.getOwner().getId() == userId) {
                 userItems.add(currentItem);
             }
         }
@@ -77,12 +77,12 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public List<Item> searchItemByText(String search) {
-        if(StringUtils.isEmpty(search)) {
+        if (StringUtils.isEmpty(search)) {
             return new LinkedList<>();
         }
         List<Item> foundedItems = new LinkedList<>();
-        for(Item currentItem: items) {
-            if(StringUtils.containsIgnoreCase(currentItem.getName(), search) ||
+        for (Item currentItem: items) {
+            if (StringUtils.containsIgnoreCase(currentItem.getName(), search) ||
                 StringUtils.containsIgnoreCase(currentItem.getDescription(), search)) {
                 foundedItems.add(currentItem);
             }
