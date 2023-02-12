@@ -32,7 +32,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        checkIfEmailExist(user.getEmail());
+        checkIfEmailExist(user.getId(), user.getEmail());
         user.setId(uniqueId);
         ++uniqueId;
         users.add(user);
@@ -44,7 +44,7 @@ public class InMemoryUserStorage implements UserStorage {
         for (User currentUser: users) {
             if (currentUser.getId().equals(user.getId())) {
                if (user.getEmail() != null) {
-                   checkIfEmailExist(user.getEmail());
+                   checkIfEmailExist(user.getId(), user.getEmail());
                    currentUser.setEmail(user.getEmail());
                }
                if (user.getName() != null) currentUser.setName(user.getName());
@@ -65,9 +65,10 @@ public class InMemoryUserStorage implements UserStorage {
         throw new NoSuchItemException("This user doesn't exist");
     }
 
-    private boolean checkIfEmailExist(String email) {
+    private boolean checkIfEmailExist(Long userId, String email) {
         if (!users.isEmpty()) {
             for (User currentUser : users) {
+                if(currentUser.getId() == userId) continue;
                 if (currentUser.getEmail().equals(email)) {
                     log.trace("[X] User with email _{} is already exist", currentUser.getEmail());
                     throw new AlreadyExistException("User with this email is already exist");
