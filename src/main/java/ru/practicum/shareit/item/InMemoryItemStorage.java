@@ -27,7 +27,7 @@ public class InMemoryItemStorage implements ItemStorage {
     @Override
     public Item updateItem(Item item) {
         for (Item currentItem: items) {
-            if (currentItem.getId() == item.getId()) {
+            if (currentItem.getId().equals(item.getId())) {
                 if (item.getOwner() == currentItem.getOwner()) {
 
                     if (item.getAvailable() != null) {
@@ -57,7 +57,7 @@ public class InMemoryItemStorage implements ItemStorage {
     @Override
     public Item getItemById(Long itemId) {
         for (Item currentItem : items) {
-            if (currentItem.getId() == itemId) {
+            if (currentItem.getId().equals(itemId)) {
                 return currentItem;
             }
         }
@@ -68,7 +68,7 @@ public class InMemoryItemStorage implements ItemStorage {
     public List<Item> getUserItems(Long userId) {
         List<Item> userItems = new LinkedList<>();
         for (Item currentItem : items) {
-            if (currentItem.getOwner().getId() == userId) {
+            if (currentItem.getOwner().getId().equals(userId)) {
                 userItems.add(currentItem);
             }
         }

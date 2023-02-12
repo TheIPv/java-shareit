@@ -23,7 +23,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User getUserById(Long userId) {
         for (User currentUser: users) {
-            if (currentUser.getId() == userId) {
+            if (currentUser.getId().equals(userId)) {
                 return currentUser;
             }
         }
@@ -42,7 +42,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         for (User currentUser: users) {
-            if (currentUser.getId() == user.getId()) {
+            if (currentUser.getId().equals(user.getId())) {
                if (user.getEmail() != null) {
                    checkIfEmailExist(user.getEmail());
                    currentUser.setEmail(user.getEmail());
@@ -57,7 +57,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteUser(Long userId) {
         for (User currentUser: users) {
-            if (currentUser.getId() ==  userId) {
+            if (currentUser.getId().equals(userId)) {
                 users.remove(currentUser);
                 return;
             }
