@@ -68,7 +68,7 @@ public class InMemoryUserStorage implements UserStorage {
     private boolean checkIfEmailExist(Long userId, String email) {
         if (!users.isEmpty()) {
             for (User currentUser : users) {
-                if (currentUser.getId() == userId) continue;
+                if (currentUser.getId().equals(userId)) continue;
                 if (currentUser.getEmail().equals(email)) {
                     log.trace("[X] User with email _{} is already exist", currentUser.getEmail());
                     throw new AlreadyExistException("User with this email is already exist");
