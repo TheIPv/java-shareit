@@ -60,9 +60,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItemByText(String search) {
-        if (search == null) {
-            throw new NotValidException("Request not specified");
-        }
         return itemStorage.searchItemByText(search)
                 .stream()
                 .filter(Item::getAvailable)

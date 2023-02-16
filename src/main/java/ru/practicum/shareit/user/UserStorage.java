@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface UserStorage {
-    List<User> getAllUsers();
+    Collection<User> getAllUsers();
 
     User getUserById(Long userId);
 

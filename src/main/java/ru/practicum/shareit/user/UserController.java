@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * TODO Sprint add-controllers.
  */
+@Slf4j
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class UserController {
 
     @PostMapping
     public UserDto addUser(@RequestBody UserDto userDto) {
+        log.info("Получен POST-запрос к эндпоинту: '/users' на на добавление пользователя");
         return userService.addUser(userDto);
     }
 

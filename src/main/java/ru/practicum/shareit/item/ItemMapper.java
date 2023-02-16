@@ -9,7 +9,6 @@ import ru.practicum.shareit.user.User;
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    @Autowired
     public static ItemDto toItemDto(Item item) {
         ItemDto itemDto = new ItemDto();
 
