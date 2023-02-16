@@ -21,7 +21,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(Long userId) {
-        if(users.containsKey(userId)) {
+        if (users.containsKey(userId)) {
             return users.get(userId);
         }
         throw new NoSuchItemException("User with ID " + userId + " doesn't exist");
@@ -38,7 +38,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        if(users.containsKey(user.getId())) {
+        if (users.containsKey(user.getId())) {
             User currentUser = users.get(user.getId());
             if (user.getEmail() != null) {
                 checkIfEmailExist(user.getId(), user.getEmail());

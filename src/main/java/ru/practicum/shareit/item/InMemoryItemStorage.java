@@ -28,7 +28,7 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public Item updateItem(Item item) {
-        if(items.containsKey(item.getId())) {
+        if (items.containsKey(item.getId())) {
             Item currentItem = items.get(item.getId());
             if (currentItem.getId().equals(item.getId())) {
                 if (item.getOwner() == currentItem.getOwner()) {
