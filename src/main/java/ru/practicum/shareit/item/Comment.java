@@ -4,13 +4,10 @@ import lombok.Data;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "comments")
-@Table(name = "comments")
 public class Comment {
     @Id
     private Long id;
