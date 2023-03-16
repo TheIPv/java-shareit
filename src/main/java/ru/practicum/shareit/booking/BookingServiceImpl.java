@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(bookingDtoCreate.getItemId())
                 .orElseThrow(() -> new NoSuchItemException("Item with ID " +
                         bookingDtoCreate.getItemId() + " wasn't found"));
-        if (item.getOwner().getId() == bookerId) {
+        if (item.getOwner().getId().equals(bookerId)) {
             throw new NoSuchItemException("Item with ID " + item.getId() + " belongs to " +
                     "User with ID" + bookerId);
         }
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NoSuchItemException("Booking with ID " +
                         bookingId + " wasn't found"));
-        if (booking.getBooker().getId() ==  bookerId) {
+        if (booking.getBooker().getId().equals(bookerId)) {
             throw new NoSuchItemException("This is your Item");
         }
         if (booking.getStatus().equals(Status.APPROVED)) {
@@ -109,7 +109,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findAll()
                         .stream()
                         .sorted((a, b) -> a.getStart().isBefore(b.getStart()) ? 1 : -1)
-                        .filter(s -> s.getBooker().getId() == userId)
+                        .filter(s -> s.getBooker().getId().equals(userId))
                         .filter(s -> s.getStatus().toString().equals(state))
                         .map(BookingMapper::toBookingDto)
                         .collect(Collectors.toList());
@@ -151,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findAll()
                         .stream()
                         .sorted((a, b) -> a.getStart().isBefore(b.getStart()) ? 1 : -1)
-                        .filter(s -> s.getItem().getOwner().getId() == userId)
+                        .filter(s -> s.getItem().getOwner().getId().equals(userId))
                         .filter(s -> s.getStatus().toString().equals(state))
                         .map(BookingMapper::toBookingDto)
                         .collect(Collectors.toList());

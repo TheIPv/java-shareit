@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
         }
         try {
             Item updatedItem = itemRepository.findById(item.getId()).orElseThrow();
-            if (updatedItem.getOwner().getId() != userId) {
+            if (!updatedItem.getOwner().getId().equals(userId)) {
                 throw new NoSuchItemException("Item doesn't belong to this owner");
             }
             if (item.getAvailable() != null) updatedItem.setAvailable(item.getAvailable());
@@ -93,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.findAll()
                 .stream()
-                .filter(s -> s.getOwner().getId() == userId)
+                .filter(s -> s.getOwner().getId().equals(userId))
                 .map(s -> constructItemDtoForOwner(s, LocalDateTime.now(), userId))
                 .sorted(Comparator.comparing(s -> s.getId()))
                 .collect(toList());
@@ -118,7 +118,7 @@ public class ItemServiceImpl implements ItemService {
                         userId + " wasn't found"));
         BookingDto bookingDto = bookingService.getUserBookings(Status.APPROVED.toString(),userId)
                 .stream()
-                .filter(s -> s.getItem().getId() == itemId)
+                .filter(s -> s.getItem().getId().equals(itemId))
                 .min(Comparator.comparing(BookingDto::getEnd)).orElse(null);
         if (bookingDto != null && bookingDto.getEnd().isBefore(LocalDateTime.now())) {
             Comment comment = new Comment();
@@ -148,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = bookingRepository
                 .findAll()
                 .stream()
-                .filter(s -> s.getItem().getId() == item.getId() &&  s.getStart().isBefore(now))
+                .filter(s -> s.getItem().getId().equals(item.getId()) &&  s.getStart().isBefore(now))
                 .max(Comparator.comparing(Booking::getEnd))
                 .orElse(null);
         if (lastBooking != null && item.getOwner().getId() == userId) {
@@ -159,11 +159,11 @@ public class ItemServiceImpl implements ItemService {
         Booking nextBooking = bookingRepository
                 .findAll()
                 .stream()
-                .filter(s -> s.getItem().getId() == item.getId() &&  s.getStart().isAfter(now))
+                .filter(s -> s.getItem().getId().equals(item.getId()) &&  s.getStart().isAfter(now))
                 .min(Comparator.comparing(Booking::getStart))
                 .orElse(null);
 
-        if (nextBooking != null && item.getOwner().getId() == userId && nextBooking.getStatus().equals(Status.APPROVED)) {
+        if (nextBooking != null && item.getOwner().getId().equals(userId) && nextBooking.getStatus().equals(Status.APPROVED)) {
             itemDto.setNextBooking(BookingMapper.toBookingForItemDto(nextBooking));
         } else {
             itemDto.setNextBooking(null);
