@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
 
@@ -32,5 +33,16 @@ public class ItemMapper {
 
         return item;
 
+    }
+
+    public static CommentDto toCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setCreated(comment.getCreated());
+        commentDto.setText(comment.getText());
+        commentDto.setItemDto(ItemMapper.toItemDto(comment.getItem()));
+        commentDto.setId(comment.getId());
+        commentDto.setAuthorName(comment.getAuthor().getName());
+
+        return commentDto;
     }
 }
