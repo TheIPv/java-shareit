@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NoSuchItemException;
 import ru.practicum.shareit.exception.NotValidException;
@@ -60,8 +59,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Long userId, UserDto user) {
         checkValid(user);
         User updatedUser = userRepository.findById(userId).orElseThrow();
-        if(user.getName() != null) updatedUser.setName(user.getName());
-        if(user.getEmail() != null) updatedUser.setEmail(user.getEmail());
+        if (user.getName() != null) updatedUser.setName(user.getName());
+        if (user.getEmail() != null) updatedUser.setEmail(user.getEmail());
         userRepository.save(updatedUser);
         log.debug("[V] User witch ID _{} successfully updated", user.getId());
         return userMapper.toUserDto(updatedUser);

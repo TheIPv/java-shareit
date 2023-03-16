@@ -26,9 +26,10 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private Long bookingId = Long.valueOf(1);
+
     @Override
     public BookingDto addBooking(BookingDtoCreate bookingDtoCreate, Long bookerId) {
-        if(bookingDtoCreate.getItemId() == null || bookingDtoCreate.getStart() == null
+        if (bookingDtoCreate.getItemId() == null || bookingDtoCreate.getStart() == null
             || bookingDtoCreate.getEnd() == null ||
                     bookingDtoCreate.getStart().equals(bookingDtoCreate.getEnd())) {
             throw new NotValidException("Item isn't set or not valid");
@@ -39,14 +40,14 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(bookingDtoCreate.getItemId())
                 .orElseThrow(() -> new NoSuchItemException("Item with ID " +
                         bookingDtoCreate.getItemId() + " wasn't found"));
-        if(item.getOwner().getId() == bookerId) {
+        if (item.getOwner().getId() == bookerId) {
             throw new NoSuchItemException("Item with ID " + item.getId() + " belongs to " +
                     "User with ID" + bookerId);
         }
-        if(!item.getAvailable()) {
+        if (!item.getAvailable()) {
             throw new NotValidException("Item with ID " + item.getId() + " isn't available");
         }
-        if(bookingDtoCreate.getEnd().isBefore(LocalDateTime.now()) ||
+        if (bookingDtoCreate.getEnd().isBefore(LocalDateTime.now()) ||
             bookingDtoCreate.getEnd().isBefore(bookingDtoCreate.getStart()) ||
                 bookingDtoCreate.getStart().isBefore(LocalDateTime.now())) {
             throw new NotValidException("Start or End LocalDateTime isn't valid");
@@ -63,13 +64,13 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NoSuchItemException("Booking with ID " +
                         bookingId + " wasn't found"));
-        if(booking.getBooker().getId() ==  bookerId) {
+        if (booking.getBooker().getId() ==  bookerId) {
             throw new NoSuchItemException("This is your Item");
         }
-        if(booking.getStatus().equals(Status.APPROVED)) {
+        if (booking.getStatus().equals(Status.APPROVED)) {
             throw new NotValidException("Booking already approved");
         }
-        booking.setStatus(approved?Status.APPROVED:Status.REJECTED);
+        booking.setStatus(approved ? Status.APPROVED : Status.REJECTED);
         bookingRepository.save(booking);
         return BookingMapper.toBookingDto(booking);
     }
@@ -82,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(booking.getItem().getId())
                 .orElseThrow(() -> new NoSuchItemException("Item with ID " +
                         booking.getItem().getId() + " wasn't found"));
-        if(booking.getBooker().getId() != bookerId &&
+        if (booking.getBooker().getId() != bookerId &&
                 item.getOwner().getId() != bookerId) {
             throw new NoSuchItemException("User with ID " + bookerId + " doesn't have rights" +
                     "to get booking with ID " + bookingId);
@@ -107,7 +108,7 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED":
                 return bookingRepository.findAll()
                         .stream()
-                        .sorted((a, b) -> a.getStart().isBefore(b.getStart())?1:-1)
+                        .sorted((a, b) -> a.getStart().isBefore(b.getStart()) ? 1 : -1)
                         .filter(s -> s.getBooker().getId() == userId)
                         .filter(s -> s.getStatus().toString().equals(state))
                         .map(BookingMapper::toBookingDto)
@@ -138,7 +139,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NoSuchItemException("User with ID " +
                         userId + " wasn't found"));
         Sort sort = Sort.by("start").descending();
-        switch(state) {
+        switch (state) {
             case "ALL":
                 return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId)
                         .stream()
@@ -149,7 +150,7 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED":
                 return bookingRepository.findAll()
                         .stream()
-                        .sorted((a, b) -> a.getStart().isBefore(b.getStart())?1:-1)
+                        .sorted((a, b) -> a.getStart().isBefore(b.getStart()) ? 1 : -1)
                         .filter(s -> s.getItem().getOwner().getId() == userId)
                         .filter(s -> s.getStatus().toString().equals(state))
                         .map(BookingMapper::toBookingDto)

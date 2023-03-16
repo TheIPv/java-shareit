@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
+
 @Entity(name = "Items")
 @Table(name = "items")
 @Data

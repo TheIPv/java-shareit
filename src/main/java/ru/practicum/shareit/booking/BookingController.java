@@ -2,12 +2,9 @@ package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoCreate;
-import ru.practicum.shareit.exception.NotValidException;
 
 import java.util.List;
 
@@ -22,6 +19,7 @@ import javax.validation.Valid;
 public class BookingController {
     private static final String USER_ID = "X-Sharer-User-Id";
     private final BookingService bookingService;
+
     @Autowired
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -53,6 +51,7 @@ public class BookingController {
                                             @RequestHeader(USER_ID) Long userId) {
             return bookingService.getUserBookings(state, userId);
     }
+
     @GetMapping("/owner")
     public List<BookingDto> getUserItemsBookings(@RequestParam(defaultValue = "ALL") String state,
                                             @RequestHeader(USER_ID) Long userId) {
