@@ -83,8 +83,8 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(booking.getItem().getId())
                 .orElseThrow(() -> new NoSuchItemException("Item with ID " +
                         booking.getItem().getId() + " wasn't found"));
-        if (booking.getBooker().getId() != bookerId &&
-                item.getOwner().getId() != bookerId) {
+        if (!booking.getBooker().getId().equals(bookerId) &&
+                !item.getOwner().getId().equals(bookerId)) {
             throw new NoSuchItemException("User with ID " + bookerId + " doesn't have rights" +
                     "to get booking with ID " + bookingId);
         }
