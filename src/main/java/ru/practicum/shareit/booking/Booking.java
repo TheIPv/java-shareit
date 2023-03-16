@@ -19,10 +19,10 @@ public class Booking {
     private LocalDateTime start;
     @Column(name = "end_date")
     private LocalDateTime end;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "items_id")
     private Item item;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "users_id")
     private User booker;
     @Enumerated(EnumType.STRING)

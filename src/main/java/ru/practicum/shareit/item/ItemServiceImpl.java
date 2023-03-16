@@ -41,15 +41,12 @@ public class ItemServiceImpl implements ItemService {
         if (ownerId == null) {
             throw new NotValidException("Owner ID not specified");
         }
-        try {
-            Item createdItem = itemMapper.toItem(item, userRepository.findById(ownerId).orElseThrow(), null);
-            createdItem.setId(itemId);
-            ++itemId;
-            itemRepository.save(createdItem);
-            return ItemMapper.toItemDto(createdItem);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchItemException("Incorrect Owner ID");
-        }
+        Item createdItem = itemMapper.toItem(item, userRepository.findById(ownerId)
+                .orElseThrow(() -> new NoSuchItemException("Incorrect Owner ID")), null);
+        createdItem.setId(itemId);
+        ++itemId;
+        itemRepository.save(createdItem);
+        return ItemMapper.toItemDto(createdItem);
     }
 
     @Override
@@ -57,19 +54,16 @@ public class ItemServiceImpl implements ItemService {
         if (userId == null) {
             throw new NotValidException("User ID not specified");
         }
-        try {
-            Item updatedItem = itemRepository.findById(item.getId()).orElseThrow();
-            if (!updatedItem.getOwner().getId().equals(userId)) {
-                throw new NoSuchItemException("Item doesn't belong to this owner");
-            }
-            if (item.getAvailable() != null) updatedItem.setAvailable(item.getAvailable());
-            if (item.getDescription() != null) updatedItem.setDescription(item.getDescription());
-            if (item.getName() != null) updatedItem.setName(item.getName());
-            updatedItem = itemRepository.save(updatedItem);
-            return ItemMapper.toItemDto(updatedItem);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchItemException("Item wasn't found by this ID");
+        Item updatedItem = itemRepository.findById(item.getId())
+                .orElseThrow(() -> new NoSuchItemException("Item wasn't found by this ID"));
+        if (!updatedItem.getOwner().getId().equals(userId)) {
+            throw new NoSuchItemException("Item doesn't belong to this owner");
         }
+        if (item.getAvailable() != null) updatedItem.setAvailable(item.getAvailable());
+        if (item.getDescription() != null) updatedItem.setDescription(item.getDescription());
+        if (item.getName() != null) updatedItem.setName(item.getName());
+        updatedItem = itemRepository.save(updatedItem);
+        return ItemMapper.toItemDto(updatedItem);
     }
 
     @Override
@@ -77,13 +71,9 @@ public class ItemServiceImpl implements ItemService {
         if (itemId == null) {
             throw new NotValidException("Item ID not specified");
         }
-        try {
-            Item item = itemRepository.findById(itemId).orElseThrow();
-            return constructItemDtoForOwner(item, LocalDateTime.now(), requestorId);
-
-        } catch (NoSuchElementException e) {
-            throw new NoSuchItemException("Item wasn't found by this ID");
-        }
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NoSuchItemException("Item wasn't found by this ID"));
+        return constructItemDtoForOwner(item, LocalDateTime.now(), requestorId);
     }
 
     @Override
@@ -114,8 +104,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(CommentDto commentDto, Long itemId, Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchItemException("User with ID " +
-                        userId + " wasn't found"));
+                .orElseThrow(() -> new NoSuchItemException("User with ID " + userId + " wasn't found"));
         BookingDto bookingDto = bookingService.getUserBookings(Status.APPROVED.toString(),userId)
                 .stream()
                 .filter(s -> s.getItem().getId().equals(itemId))

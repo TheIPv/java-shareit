@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     private Long id;
-    @NotBlank
-    @NotEmpty
     private String text;
     @ManyToOne()
     @JoinColumn(name = "items_id", referencedColumnName = "id")

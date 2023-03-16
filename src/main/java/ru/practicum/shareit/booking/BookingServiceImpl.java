@@ -35,11 +35,9 @@ public class BookingServiceImpl implements BookingService {
             throw new NotValidException("Item isn't set or not valid");
         }
         User user = userRepository.findById(bookerId)
-                .orElseThrow(() -> new NoSuchItemException("User with ID " +
-                    bookerId + " wasn't found"));
+                .orElseThrow(() -> new NoSuchItemException("User with ID " + bookerId + " wasn't found"));
         Item item = itemRepository.findById(bookingDtoCreate.getItemId())
-                .orElseThrow(() -> new NoSuchItemException("Item with ID " +
-                        bookingDtoCreate.getItemId() + " wasn't found"));
+                .orElseThrow(() -> new NoSuchItemException("Item with ID " + bookingDtoCreate.getItemId() + " wasn't found"));
         if (item.getOwner().getId().equals(bookerId)) {
             throw new NoSuchItemException("Item with ID " + item.getId() + " belongs to " +
                     "User with ID" + bookerId);

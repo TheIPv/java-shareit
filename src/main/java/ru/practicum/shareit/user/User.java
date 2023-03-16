@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
  * TODO Sprint add-controllers.
  */
 @Entity(name = "users")
-@Table(name = "users")
 @Data
 public class User {
     @Id
