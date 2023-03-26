@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NoSuchItemException;
 import ru.practicum.shareit.exception.NotValidException;
+import ru.practicum.shareit.item.ItemService;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
@@ -22,6 +24,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private Long itemRequestId = Long.valueOf(1);
     private final UserRepository userRepository;
+    private final ItemService itemService;
     private final ItemRequestRepository itemRequestRepository;
 
     @Override
@@ -38,7 +41,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         itemRequest.setId(itemRequestId);
         ++itemRequestId;
         itemRequestRepository.save(itemRequest);
-        return ItemRequestMapper.toItemRequestDto(itemRequest);
+        return ItemRequestMapper.toItemRequestDto(itemRequest,
+                itemService.getItemsByRequestId(itemRequest.getId()));
     }
 
     @Override
@@ -47,7 +51,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NoSuchItemException("Incorrect user ID"));
         return itemRequestRepository.findItemRequestByRequestorIdOrderByCreatedDesc(userId)
                 .stream()
-                .map(ItemRequestMapper::toItemRequestDto)
+                .map(s -> ItemRequestMapper.toItemRequestDto(s,
+                        itemService.getItemsByRequestId(s.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -62,7 +67,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .stream()
                 .filter(s -> !s.getRequestor().getId().equals(userId))
                 .limit(size)
-                .map(ItemRequestMapper::toItemRequestDto)
+                .map(s -> ItemRequestMapper.toItemRequestDto(s,
+                        itemService.getItemsByRequestId(s.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -70,7 +76,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto getRequest(Long userId, Long requestId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchItemException("Incorrect user ID"));
-        return ItemRequestMapper.toItemRequestDto(itemRequestRepository.findById(requestId)
-                .orElseThrow(() -> new NoSuchItemException("Incorrect item ID")));
+        ItemRequest itemRequest = itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NoSuchItemException("Incorrect item ID"));
+        List<ItemDto> itemDtos = itemService.getItemsByRequestId(requestId);
+        return ItemRequestMapper.toItemRequestDto(itemRequest, itemDtos);
     }
 }
