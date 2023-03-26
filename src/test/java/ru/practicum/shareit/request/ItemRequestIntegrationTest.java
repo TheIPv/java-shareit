@@ -24,9 +24,9 @@ class ItemRequestIntegrationTest {
     void whenCheckAddItemWithNonExistUser() {
         //test
         assertThrows(
-                NoSuchItemException.class,
-                ()->{
-                    itemRequestController.addItemRequest(itemRequestDtoOne, 1L);
-                });
+            NoSuchItemException.class,
+            () -> {
+                itemRequestController.addItemRequest(itemRequestDtoOne, 1L);
+            });
     }
 }

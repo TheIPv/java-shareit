@@ -19,47 +19,47 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
     @MockBean
-    private UserRepository UserRepository;
+    private UserRepository userRepository;
     private User user;
 
     @BeforeEach
     void setUp() {
         user = new User(1L,"test", "test@test.test");
-        reset(UserRepository);
+        reset(userRepository);
     }
 
     @AfterEach
     void mockVerify() {
-        verifyNoMoreInteractions(UserRepository);
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
     void whenCheckAddMethod() {
-        when(UserRepository.save(user)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
         User testUser = UserMapper.toUser(userService.addUser(UserMapper.toUserDto(user)));
         assertEquals(1L, testUser.getId());
         assertEquals("test", testUser.getName());
         assertEquals("test@test.test", testUser.getEmail());
 
-        verify(UserRepository, times(1)).save(user);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
     void whenCheckoutGetByIdMethod() {
-        when(UserRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 
         User testUser = UserMapper.toUser(userService.getUserById(1L));
         assertEquals(1L, testUser.getId());
         assertEquals("test", testUser.getName());
         assertEquals("test@test.test", testUser.getEmail());
 
-        verify(UserRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
     void whenCheckoutGetAllMethod() {
-        when(UserRepository.findAll()).thenReturn(List.of(user));
+        when(userRepository.findAll()).thenReturn(List.of(user));
 
         //test
         List<User> users = userService.getAllUsers()
@@ -69,13 +69,13 @@ class UserServiceTest {
         assertEquals(1, users.size());
         assertEquals(user, users.get(0));
 
-        verify(UserRepository, times(1)).findAll();
+        verify(userRepository, times(1)).findAll();
     }
 
     @Test
     void whenCheckoutUpdateMethod() {
-        when(UserRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(UserRepository.save(user)).thenReturn(user);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
 
 
         User testUser = UserMapper.toUser(userService.updateUser(1L, UserMapper.toUserDto(user)));
@@ -83,14 +83,14 @@ class UserServiceTest {
         assertEquals("test", testUser.getName());
         assertEquals("test@test.test", testUser.getEmail());
 
-        verify(UserRepository, times(1)).findById(1L);
-        verify(UserRepository, times(1)).save(user);
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
     void whenCheckoutDeleteMethod() {
         userService.deleteUser(1L);
-        verify(UserRepository, times(1)).deleteById(1L);
+        verify(userRepository, times(1)).deleteById(1L);
     }
 
 }

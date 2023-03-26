@@ -26,7 +26,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, Long userId) {
-        if(itemRequestDto.getDescription() == null) {
+        if (itemRequestDto.getDescription() == null) {
             throw new NotValidException("Description is empty");
         }
         User requestor = userRepository.findById(userId)
@@ -53,7 +53,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getOtherUserRequests(Long userId, int from, int size) {
-        if(size <= 0 || from < 0) {
+        if (size <= 0 || from < 0) {
             throw new NotValidException("Incorrect size or from parametrs");
         }
         userRepository.findById(userId)

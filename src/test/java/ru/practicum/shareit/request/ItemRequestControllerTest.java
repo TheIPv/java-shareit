@@ -29,7 +29,8 @@ public class ItemRequestControllerTest {
     private UserDto requestor = new UserDto(1L, "requestor", "request@mail.ru");
     private ItemDto requestedItem = new ItemDto(1L, "item", "desc", true,
             new BookingForItemDto(), new BookingForItemDto(), List.of(), 1L);
-    private ItemRequestDto itemRequestDto1 = new ItemRequestDto(1L, "desc 1", requestor, LocalDateTime.now(), List.of(requestedItem));
+    private ItemRequestDto itemRequestDto1 = new ItemRequestDto(1L, "desc 1",
+            requestor, LocalDateTime.now(), List.of(requestedItem));
 
     @Test
     public void addItemRequest() throws Exception {
@@ -37,7 +38,7 @@ public class ItemRequestControllerTest {
         when(itemRequestController.getRequest(requestor.getId(), itemRequestDto1.getId()))
                 .thenReturn(itemRequestDto1);
 
-        mvc.perform(get("/requests/"+ itemRequestDto1.getId())
+        mvc.perform(get("/requests/" + itemRequestDto1.getId())
                 .header("X-Sharer-User-Id", "1"))
                 .andExpect(status().isOk());
     }

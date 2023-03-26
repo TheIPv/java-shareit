@@ -8,15 +8,16 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.UserMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ItemRequestMapper {
     private static ItemService itemService;
+
     @Autowired
     public ItemRequestMapper(ItemService itemService) {
         this.itemService = itemService;
     }
+
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
 
         List<ItemDto> items = itemService.getItemsByRequestId(itemRequest.getId());
@@ -28,6 +29,7 @@ public class ItemRequestMapper {
         itemRequestDto.setItems(items);
         return itemRequestDto;
     }
+
     public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
 
         ItemRequest itemRequest = new ItemRequest();

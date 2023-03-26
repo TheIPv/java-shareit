@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getUserBookings(String state, Long userId, int from, int size) {
-        if(from < 0 || size <= 0) {
+        if (from < 0 || size <= 0) {
             throw new NotValidException("Incorrect values of params from or size");
         }
         userRepository.findById(userId)
@@ -139,7 +139,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getUserItemsBookings(String state, Long userId, int from, int size) {
-        if(from < 0 || size <= 0) {
+        if (from < 0 || size <= 0) {
             throw new NotValidException("Incorrect values of params from or size");
         }
         userRepository.findById(userId)
