@@ -9,6 +9,10 @@ import ru.practicum.shareit.booking.dto.BookingDtoCreate;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 /**
  * TODO Sprint add-bookings.
@@ -48,14 +52,18 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDto> getUserBookings(@RequestParam(defaultValue = "ALL") String state,
-                                            @RequestHeader(USER_ID) Long userId) {
-            return bookingService.getUserBookings(state, userId);
+                                            @RequestHeader(USER_ID) Long userId,
+                                            @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
+                                            @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+            return bookingService.getUserBookings(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getUserItemsBookings(@RequestParam(defaultValue = "ALL") String state,
-                                            @RequestHeader(USER_ID) Long userId) {
-        return bookingService.getUserItemsBookings(state, userId);
+                                            @RequestHeader(USER_ID) Long userId,
+                                            @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
+                                            @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+        return bookingService.getUserItemsBookings(state, userId, from, size);
     }
 
 }
