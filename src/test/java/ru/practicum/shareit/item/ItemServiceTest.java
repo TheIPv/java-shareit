@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.exception.NoSuchItemException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.request.ItemRequest;
