@@ -70,4 +70,65 @@ public class BookingServiceTest {
             bookingService.addBooking(bookingDtoCreate, userId);
         }).isInstanceOf(NotValidException.class);
     }
+
+    @Test
+    public void createBookingNotUser() {
+        UserDto userDto1 = userMapper.toUserDto(new User(0L, "Name", "User@mail.ru"));
+        Long userId1 = userService.addUser(userDto1).getId();
+
+        BookingDtoCreate bookingDtoCreate = new BookingDtoCreate();
+        bookingDtoCreate.setStart(LocalDateTime.now());
+        bookingDtoCreate.setEnd(LocalDateTime.now().plusNanos(2));
+
+        assertThatThrownBy(() -> {
+            bookingService.addBooking(bookingDtoCreate, userId1);
+        }).isInstanceOf(NotValidException.class);
+    }
+
+
+    @Test
+    public void updateBooking() {
+        UserDto userDto1 = userMapper.toUserDto(new User(0L, "Name", "User@mail.ru"));
+        Long userId1 = userService.addUser(userDto1).getId();
+        UserDto userDto = userMapper.toUserDto(new User(0L, "Name", "User1@mail.ru"));
+        Long userId = userService.addUser(userDto).getId();
+        ItemDto itemDto = itemMapper.toItemDto(new Item(0L, "ItemName", "ItemDescription",
+                true, UserMapper.toUser(userDto1), userId));
+        Long itemId = itemService.addItem(userId1, itemDto).getId();
+
+        BookingDtoCreate bookingDtoCreate = new BookingDtoCreate();
+        bookingDtoCreate.setStart(LocalDateTime.now().plusSeconds(2));
+        bookingDtoCreate.setEnd(LocalDateTime.now().plusSeconds(4));
+        bookingDtoCreate.setItemId(itemId);
+
+        long bookingId = bookingService.addBooking(bookingDtoCreate, userId).getId();
+        BookingDto booking = bookingService.setApprove(bookingId, userId1,false);
+
+        assertThat(Status.REJECTED, equalTo(booking.getStatus()));
+
+    }
+
+    @Test
+    public void getById() {
+        UserDto userDto1 = userMapper.toUserDto(new User(0L, "Name", "User@mail.ru"));
+        Long userId1 = userService.addUser(userDto1).getId();
+        UserDto userDto = userMapper.toUserDto(new User(0L, "Name", "User1@mail.ru"));
+        Long userId = userService.addUser(userDto).getId();
+        ItemDto itemDto = itemMapper.toItemDto(new Item(0L, "ItemName", "ItemDescription", true, null, userId));
+        Long itemId = itemService.addItem(userId1, itemDto).getId();
+
+        BookingDtoCreate bookingDtoCreate = new BookingDtoCreate();
+        bookingDtoCreate.setStart(LocalDateTime.now().plusSeconds(2));
+        bookingDtoCreate.setEnd(LocalDateTime.now().plusSeconds(4));
+        bookingDtoCreate.setItemId(itemId);
+
+        BookingDto bookingResponseDto = bookingService.addBooking(bookingDtoCreate, userId);
+        Long bookingId = bookingResponseDto.getId();
+
+        BookingDto booking = bookingService.getBooking(bookingId, userId);
+
+        assertThat(userId, equalTo(booking.getBooker().getId()));
+        assertThat(bookingId, equalTo(booking.getId()));
+        assertThat(bookingResponseDto, equalTo(booking));
+    }
 }
