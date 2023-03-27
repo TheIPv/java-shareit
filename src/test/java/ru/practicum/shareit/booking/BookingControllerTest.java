@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +16,8 @@ import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,25 +33,30 @@ public class BookingControllerTest {
 
     @MockBean
     private BookingController bookingController;
+    private BookingDtoCreate bookingDtoCreate;
+
+
+    @BeforeEach
+    public void setUp() {
+        bookingDtoCreate = new BookingDtoCreate();
+        bookingDtoCreate.setStart(LocalDateTime.now().plusSeconds(2));
+        bookingDtoCreate.setEnd(LocalDateTime.now().plusSeconds(4));
+        bookingDtoCreate.setItemId(1L);
+    }
+
 
     @Test
     public void whenAddingBookingWithNonExistUser() throws Exception {
-        BookingDtoCreate bookingDtoCreate = new BookingDtoCreate();
-        bookingDtoCreate.setStart(LocalDateTime.now());
-        bookingDtoCreate.setEnd(LocalDateTime.now());
-        bookingDtoCreate.setItemId(1L);
-
         Booking booking = BookingMapper.toBookingFromDtoCreate(bookingDtoCreate, 1L, new User(), new Item());
         BookingDto bookingDto = BookingMapper.toBookingDto(booking);
 
-        bookingController.addBooking(1L, bookingDtoCreate);
-        when(bookingController.addBooking(1L, bookingDtoCreate))
-                .thenReturn(bookingDto);
+        when(bookingController.addBooking(anyLong(), any())).thenReturn(bookingDto);
 
         mvc.perform(post("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", "1")
                         .content(gson.toJson(bookingDtoCreate))
-                        .header("X-Sharer-User-Id", "1"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.ALL_VALUE))
                 .andExpect(status().isBadRequest());
     }
 }
