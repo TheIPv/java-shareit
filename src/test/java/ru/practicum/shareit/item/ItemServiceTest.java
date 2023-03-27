@@ -30,7 +30,6 @@ public class ItemServiceTest {
 
     private final ItemService itemService;
     private final UserService userService;
-    private final BookingService bookingService;
     private final UserMapper userMapper;
     private final ItemMapper itemMapper;
 
