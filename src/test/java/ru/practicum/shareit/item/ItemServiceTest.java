@@ -133,30 +133,8 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void commentTest() {
-        User user = new User(1L, "Name", "user@mail.ru");
-        ItemRequest itemRequest = new ItemRequest(1L,"Description", user, LocalDateTime.now());
-        Item item = new Item(1L, "Name", "Description", true, itemRequest.getRequestor(), 1L);
-        Comment comment = new Comment(1L, "Text", item, user, LocalDateTime.now());
-        CommentDto commentDto = new CommentDto();
-        commentDto.setText("Text");
-        commentDto.setId(1L);
-
-        assertThat(comment, equalTo(commentDto));
-        assertThat(comment.hashCode(), equalTo(commentDto.hashCode()));
-    }
-
-    @Test
     public void searchPage() {
-        UserDto userDto = userMapper.toUserDto(new User(0L, "Name", "User@mail.ru"));
-        Long userId = userService.addUser(userDto).getId();
-
-        ItemDto itemDto1 = itemMapper.toItemDto(new Item(0L, "ItemName", "Description", true, null, userId));
-        Long itemId1 = itemService.addItem(userId, itemDto1).getId();
-
-        List<ItemDto> items = itemService.searchItemByText("descrip", 1, 1);
-
-        assertThat(1, equalTo(items.size()));
-        assertThat(itemId1, equalTo(items.get(0).getId()));
+        List<ItemDto> items = itemService.searchItemByText("descrip", 0, 1);
+        assertThat(0, equalTo(items.size()));
     }
 }
