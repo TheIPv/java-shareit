@@ -33,7 +33,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             throw new NotValidException("Description is empty");
         }
         User requestor = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchItemException("Incorrect user ID"));
+                .orElseThrow(() -> new NoSuchItemException("Entity with this ID not found"));
         itemRequestDto.setRequestor(UserMapper.toUserDto(requestor));
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto);
         itemRequest.setRequestor(requestor);

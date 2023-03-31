@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,7 +92,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchItemByText(String search, int from, int size) {
         if (search.isEmpty()) {
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
         return itemRepository.search(search, PageRequest.of(from / size, size))
                 .stream()
@@ -111,8 +112,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto createComment(CommentDto commentDto, Long itemId, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchItemException("User with ID " + userId + " wasn't found"));
+        userRepository.existsById(userId);
         BookingDto bookingDto = bookingService.getUserBookings(Status.APPROVED.toString(), userId, 0, 20)
                 .stream()
                 .filter(s -> s.getItem().getId().equals(itemId))
