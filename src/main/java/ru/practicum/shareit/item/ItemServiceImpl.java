@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.*;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotValidException("Owner ID not specified");
         }
         Item createdItem = itemMapper.toItem(item, userRepository.findById(ownerId)
-                .orElseThrow(() -> new NoSuchItemException("Incorrect Owner ID")), null);
+                .orElseThrow(() -> new NoSuchItemException("Incorrect Owner ID")));
         createdItem.setId(itemId);
         ++itemId;
         itemRepository.save(createdItem);
@@ -76,24 +78,23 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getUserItems(Long userId) {
+    public List<ItemDto> getUserItems(Long userId, int from, int size) {
         if (userId == null) {
             throw new NotValidException("User ID not specified");
         }
-        return itemRepository.findAll()
+        return itemRepository.findAllByOwner_Id(userId, PageRequest.of(from / size, size))
                 .stream()
-                .filter(s -> s.getOwner().getId().equals(userId))
                 .map(s -> constructItemDtoForOwner(s, LocalDateTime.now(), userId))
                 .sorted(Comparator.comparing(s -> s.getId()))
                 .collect(toList());
     }
 
     @Override
-    public List<ItemDto> searchItemByText(String search) {
+    public List<ItemDto> searchItemByText(String search, int from, int size) {
         if (search.isEmpty()) {
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
-        return itemRepository.search(search)
+        return itemRepository.search(search, PageRequest.of(from / size, size))
                 .stream()
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
@@ -101,10 +102,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<ItemDto> getItemsByRequestId(Long itemRequestId) {
+        return itemRepository.findAll()
+                .stream()
+                .filter(s -> s.getRequestId() != null && s.getRequestId().equals(itemRequestId))
+                .map(ItemMapper::toItemDto)
+                .collect(toList());
+    }
+
+    @Override
     public CommentDto createComment(CommentDto commentDto, Long itemId, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchItemException("User with ID " + userId + " wasn't found"));
-        BookingDto bookingDto = bookingService.getUserBookings(Status.APPROVED.toString(),userId)
+        userRepository.existsById(userId);
+        BookingDto bookingDto = bookingService.getUserBookings(Status.APPROVED.toString(), userId, 0, 20)
                 .stream()
                 .filter(s -> s.getItem().getId().equals(itemId))
                 .min(Comparator.comparing(BookingDto::getEnd)).orElse(null);
@@ -122,7 +131,6 @@ public class ItemServiceImpl implements ItemService {
             throw new NotValidException("This user doesn't booked this item");
         }
     }
-
 
     public List<CommentDto> getCommentsByItemId(Long itemId) {
         return commentRepository.findCommentsByItem_Id(itemId,

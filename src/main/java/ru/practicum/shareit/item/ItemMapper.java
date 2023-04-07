@@ -16,11 +16,12 @@ public class ItemMapper {
         itemDto.setName(item.getName());
         itemDto.setDescription(item.getDescription());
         itemDto.setAvailable(item.getAvailable());
+        itemDto.setRequestId(item.getRequestId());
 
         return itemDto;
     }
 
-    public static Item toItem(ItemDto itemDto, User owner, Long requestId) {
+    public static Item toItem(ItemDto itemDto, User owner) {
         Item item = new Item();
 
         item.setId(itemDto.getId());
@@ -29,7 +30,7 @@ public class ItemMapper {
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(owner);
-        item.setRequestId(requestId);
+        item.setRequestId(itemDto.getRequestId());
 
         return item;
 
