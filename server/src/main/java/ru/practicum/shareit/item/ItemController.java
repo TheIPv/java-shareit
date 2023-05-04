@@ -6,10 +6,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.PositiveOrZero;
-
 /**
  * TODO Sprint add-controllers.
  */
@@ -40,20 +36,20 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                      @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-                                      @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+                                      @RequestParam(required = false, defaultValue = "0") int from,
+                                      @RequestParam(required = false, defaultValue = "20") int size) {
         return itemService.getUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItemByText(@RequestParam String text,
-                                          @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-                                          @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+                                          @RequestParam(required = false, defaultValue = "0") int from,
+                                          @RequestParam(required = false, defaultValue = "20") int size) {
         return itemService.searchItemByText(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@Valid @RequestBody CommentDto commentDto, @RequestHeader("X-Sharer-User-Id") Long userId,
+    public CommentDto createComment(@RequestBody CommentDto commentDto, @RequestHeader("X-Sharer-User-Id") Long userId,
                                     @PathVariable Long itemId) {
         return itemService.createComment(commentDto, itemId, userId);
     }
