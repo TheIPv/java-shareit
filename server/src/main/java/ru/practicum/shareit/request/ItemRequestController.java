@@ -3,9 +3,6 @@ package ru.practicum.shareit.request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -24,13 +21,13 @@ public class ItemRequestController {
     }
 
     @PostMapping
-    public ItemRequestDto addItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
+    public ItemRequestDto addItemRequest(@RequestBody ItemRequestDto itemRequestDto,
                                          @RequestHeader(USER_ID) Long userId) {
         return itemRequestService.addItemRequest(itemRequestDto, userId);
     }
 
     @GetMapping
-    public List<ItemRequestDto> getUserRequests(@NotNull @RequestHeader(USER_ID) Long userId) {
+    public List<ItemRequestDto> getUserRequests(@RequestHeader(USER_ID) Long userId) {
         return itemRequestService.getUserRequests(userId);
     }
 

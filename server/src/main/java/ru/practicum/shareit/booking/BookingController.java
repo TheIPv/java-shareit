@@ -8,10 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDtoCreate;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.PositiveOrZero;
-
 @Slf4j
 @RestController
 @RequestMapping(path = "/bookings")
@@ -26,7 +22,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDto addBooking(@RequestHeader(USER_ID) Long bookerId,
-                                 @Valid @RequestBody BookingDtoCreate bookingDtoCreate) {
+                                 @RequestBody BookingDtoCreate bookingDtoCreate) {
         log.info("Получен POST-запрос к эндпоинту: '/bookings' +" +
                 " на создание бронирования от пользователя с ID={}", bookerId);
         return bookingService.addBooking(bookingDtoCreate, bookerId);
@@ -48,16 +44,16 @@ public class BookingController {
     @GetMapping
     public List<BookingDto> getUserBookings(@RequestParam(defaultValue = "ALL") String state,
                                             @RequestHeader(USER_ID) Long userId,
-                                            @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-                                            @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+                                            @RequestParam(required = false, defaultValue = "0") int from,
+                                            @RequestParam(required = false, defaultValue = "20") int size) {
             return bookingService.getUserBookings(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getUserItemsBookings(@RequestParam(defaultValue = "ALL") String state,
                                             @RequestHeader(USER_ID) Long userId,
-                                            @Valid @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-                                            @Min(1) @RequestParam(required = false, defaultValue = "20") int size) {
+                                            @RequestParam(required = false, defaultValue = "0") int from,
+                                            @RequestParam(required = false, defaultValue = "20") int size) {
         return bookingService.getUserItemsBookings(state, userId, from, size);
     }
 
