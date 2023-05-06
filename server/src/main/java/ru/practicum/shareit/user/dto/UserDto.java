@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +14,5 @@ public class UserDto {
     @Id
     private Long id;
     private String name;
-    @NotNull
-    @Email
     private String email;
 }
